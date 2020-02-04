@@ -6,9 +6,7 @@ using PyPlot
 function merge_sort(unsorted_array::Vector)
 
     # Base case
-    if length(unsorted_array) <= 1
-        return unsorted_array
-    end
+    if length(unsorted_array) <= 1; return unsorted_array; end
 
     # Divide array into left/right subarrays
     left_array = unsorted_array[1:div(length(unsorted_array),2)]
@@ -52,7 +50,7 @@ function merge_arrays(left_array::Vector, right_array::Vector)
     while length(right_array) > 0
         res[idx] = right_array[1]
         right_array = remove_val(right_array, right_array[1])
-        idx = idx+1 
+        idx = idx+1
     end
 
     # return merged array res
@@ -87,7 +85,7 @@ x = sample(1:10, 6, replace = true)
 
 x = rand(11)
 
-x_sorted_sort = sort(x)
+x_sorted_sort = sort(x; alg = MergeSort)
 
 x_sorted_merge_sort = merge_sort(x)
 
