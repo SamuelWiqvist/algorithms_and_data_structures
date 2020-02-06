@@ -6,7 +6,7 @@ function quicksort(array::Vector)
 
     array_copy = copy(array) # create copy
 
-    quicksort!(array_copy, 1, length(array)) # sort copt inplace
+    quicksort!(array_copy, 1, length(array_copy)) # sort copy inplace
 
     return array_copy
 
@@ -47,31 +47,48 @@ function partition!(array::Vector, lo::Int64, hi::Int64)
 
 end
 
-function swap!(array::Vector, x::Int64, y::Int64)
-
-    array[x] = array[x] + array[y]
-    array[y] = array[x] - array[y]
-    array[x] = array[x] - array[y]
-
-end
-
 
 # todo get implacemnt swap to work...
 
 x = sample(1:100, 5, replace = false)
 
 
-x
-
-swap!(x, 1,3)
-
-x
-
-x = sample(1:10, 10, replace = true)
+x = sample(1:10, 6, replace = true)
 
 x = rand(11)
-
 
 x_sorted_sort = sort(x; alg = QuickSort)
 
 x_sorted_quick_sort = quicksort(x)
+
+
+function test_run_time()
+
+
+    N = [2,10,50,100,200,300,500,1000,10000, 100000]
+
+    run_time_sort = zeros(length(N))
+    run_time_quicksort  = zeros(length(N))
+
+    for i in 1:length(N)
+
+        x = sample(1:1000, N[i], replace = true)
+
+        run_time_sort[i] = @elapsed sort(x; alg = QuickSort)
+        run_time_quicksort[i] = @elapsed quicksort(x)
+
+
+    end
+
+    return N, run_time_sort, run_time_quicksort
+
+
+end
+
+
+N,run_time_sort, run_time_quicksort= test_run_time()
+
+
+PyPlot.figure()
+PyPlot.plot(N, run_time_sort, "r")
+PyPlot.plot(N, run_time_quicksort, "g")

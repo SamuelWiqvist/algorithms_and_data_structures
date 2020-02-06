@@ -32,10 +32,13 @@ function merge_arrays(left_array::Vector, right_array::Vector)
     while length(left_array) > 0 && length(right_array) > 0  # add the elemeents into res from the both subarrays in asending order
         if left_array[1] <= right_array[1]
             res[idx] = left_array[1] # add value to res
-            left_array = remove_val(left_array, left_array[1]) # remove added value from the array
+            #left_array = remove_val(left_array, left_array[1]) # remove added value from the array
+            left_array = filter(x -> x != res[idx], left_array)
         else
             res[idx] = right_array[1]
-            right_array = remove_val(right_array, right_array[1])
+            #right_array = remove_val(right_array, right_array[1])
+            right_array = filter(x -> x != res[idx], right_array)
+
         end
         idx = idx+1 # update index
     end
@@ -43,37 +46,20 @@ function merge_arrays(left_array::Vector, right_array::Vector)
     # Add in elements in the subarrays that are left
     while length(left_array) > 0
         res[idx] = left_array[1]
-        left_array = remove_val(left_array, left_array[1])
+        #left_array = remove_val(left_array, left_array[1])
+        left_array = filter(x -> x != res[idx], left_array)
         idx = idx+1
     end
 
     while length(right_array) > 0
         res[idx] = right_array[1]
-        right_array = remove_val(right_array, right_array[1])
+        #right_array = remove_val(right_array, right_array[1])
+        right_array = filter(x -> x != res[idx], right_array)
         idx = idx+1
     end
 
     # return merged array res
     return res
-
-end
-
-# help function for merge stort. Removes the value val from the array array
-function remove_val(array::Vector, val::Real)
-
-    new_array = similar(array, length(array)-1) # pre-allocate new array
-
-    idx = 1 # idx for adding values not equal to val
-    for i in 1:length(array)
-
-        if array[i] != val # add value to new_array if the value is not val
-            new_array[idx] = array[i]
-            idx = idx + 1
-        end
-
-    end
-
-    return new_array
 
 end
 
@@ -102,8 +88,8 @@ function test_run_time()
 
         x = sample(1:1000, N[i], replace = true)
 
-        run_time_sort[i] = @elapsed sort(x)
-        run_time_merge_sort[i] = @elapsed sort(x)
+        run_time_sort[i] = @elapsed sort(x; alg = MergeSort)
+        run_time_merge_sort[i] = @elapsed merge_sort(x)
 
 
     end
